@@ -1,8 +1,18 @@
+// 객체를 이용하여 브라우저의 전역변수 충돌문제를 회피
 let main = {
     init : function () {
         let _this = this;
+
         $('#btn-save').on('click', function (){
             _this.save();
+        });
+
+        $('#btn-update').on('click', function (){
+            _this.update();
+        });
+
+        $('#btn-delete').on('click', function (){
+            _this.delete();
         });
     },
     save : function () {
@@ -19,7 +29,43 @@ let main = {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data)
         }).done(function () {
-            alert('');
+            alert('Your post has been registered.');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
+    update : function () {
+        let data = {
+            title : $('#title').val(),
+            content : $('#content').val()
+        };
+
+        let id = $('#id').val();
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/posts/' + id,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function () {
+            alert('Your writing has been modified.');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
+    delete : function () {
+        let id = $('#id').val();
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/v1/posts/' + id,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
+        }).done(function () {
+            alert('Your post has been deleted.');
             window.location.href = '/';
         }).fail(function (error) {
             alert(JSON.stringify(error));

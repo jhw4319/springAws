@@ -6,5 +6,27 @@
             <a href="/posts/save" role="button" class="btn btn-primary">Registration of writing</a>
         </div>
     </div>
+    <br>
+    <table class="table table-horizontal table-bordered">
+        <thead class="thead-strong">
+        <tr>
+            <th>Posting number</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Last revision date</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <!-- posts라는 Lists를 순회 -->
+        {{#posts}}
+            <tr>
+                <td>{{id}}</td>
+                <td><a href="/posts/update/{{id}}">{{title}}</a></td>
+                <td>{{author}}</td>
+                <td>{{modifiedDate}}</td>
+            </tr>
+        {{/posts}}
+        </tbody>
+    </table>
 </div>
 {{>layout/footer}}
