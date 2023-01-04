@@ -10,6 +10,8 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: jhw-github-actions-s3-bucket
+  CODE_DEPLOY_APPLICATION_NAME: jhw-springboo2-webservice
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: jhw-springboot2-webservice-group
   PROJECT_NAME: springAws
 
 # workflow는 한개 이상의 job을 가지며, 각 job은 여러 step에 따라 단계를 나눌 수 있습니다.
@@ -56,12 +58,12 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
 
       # Deploy
-      - name: Deploy
+      - name: Deploy to AWS EC2 from S3
         run: |
           aws deploy create-deployment \
-          --application-name cicdtest-project \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name cicd-test-prod \
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=project-bucket-v1,bundleType=zip,key=cicdtest/$GITHUB_SHA.zip \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip \
           --region ap-northeast-2 \
